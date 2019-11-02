@@ -136,7 +136,7 @@ if __name__ == '__main__':
                                      language_code=args.language_code)
     streaming_config = types.StreamingRecognitionConfig(config=config, interim_results=True)
 
-    print("%s recognition started!"%language_code)
+    print("%s recognition started!"%args.lang_code)
     while True:
         with MicrophoneStream(RATE, CHUNK) as stream:
             audio_generator = stream.generator()
