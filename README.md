@@ -5,7 +5,7 @@ Use Google Speech-to-Text API to do real-time live stream caption on Unity! Best
 
 The [youtube livestream](https://www.youtube.com/watch?v=AZsUm_cuj9U) that demos and explains how this works (explanation in Chinese, caption in Chinese/Japanese/English/French).
 
-Currently, the live caption is done in `python` and the result is sent to unity in real time. There might be a way to do everything in `C#`, maybe [this](https://github.com/GoogleCloudPlatform/dotnet-docs-samples/tree/master/speech/api) by I did in `python` because of some reasons:
+Currently, the live caption is done in `python` and the result is sent to unity in real time. There might be a way to do everything in `C#`, maybe [this](https://github.com/GoogleCloudPlatform/dotnet-docs-samples/tree/master/speech/api) but I did in `python` because of some reasons:
 1.  I'm not fluent in C#.
 2.  Doing speech recognition in another program allows to start/turn off the recognition at any time, and also allows to change the language at wish without restarting unity `.exe`.
 3.  There is already an asset which claims that it can do this (I don't know if it can do real time recognition though).
