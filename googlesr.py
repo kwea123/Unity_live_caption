@@ -133,7 +133,7 @@ if __name__ == '__main__':
     client = speech.SpeechClient()
     config = types.RecognitionConfig(encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
                                      sample_rate_hertz=RATE,
-                                     language_code=args.language_code)
+                                     language_code=args.lang_code)
     streaming_config = types.StreamingRecognitionConfig(config=config, interim_results=True)
 
     print("%s recognition started!"%args.lang_code)
