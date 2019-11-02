@@ -26,7 +26,7 @@ Run `pip install -r requirements.txt` to install python dependencies.
 
 1.  Test if speech recognition works in python:
     1. Change [here](https://github.com/kwea123/Unity_live_caption/blob/master/googlesr.py#L9) to where your `key.json` is located.
-    2. Run `python googlesr.py --lang_code={YOUR LANGUAGE CODE}`. For the language codes, check [here](https://cloud.google.com/speech-to-text/docs/languages). You should see the recognition output on the console.
+    2. Run `python googlesr.py --debug --lang_code={YOUR LANGUAGE CODE}`. For the language codes, check [here](https://cloud.google.com/speech-to-text/docs/languages). You should see the recognition output on the console.
 
 2.  Output the recognition result to unity:
     1.  Create a Text component via `GameObject->UI->Text`.
