@@ -1,4 +1,5 @@
 # Unity_live_caption
+[繁體中文解說看這裡](README_chinese.md)
 Use Google Speech-to-Text API to do real-time live stream caption on Unity! Best when combined with your virtual character!
 
 **Important notice before you continue : The speech to text API is NOT free! The pricing guide is [here](https://cloud.google.com/speech-to-text/pricing).**
