@@ -1,5 +1,5 @@
 # Unity_live_caption
-利用 Google Speech-to-Text API 和 Unity 來做實時直播上字幕！ 可以跟你的虛擬腳色很好的搭配使用！
+利用 Google Speech-to-Text API 和 Unity 來做實時直播上字幕！ 可以跟你的虛擬腳色很好的搭配使用！ 真人的youtuber當然也可以！
 
 **重要訊息 : 這個API是要收費的！ 收費規則在[這裡](https://cloud.google.com/speech-to-text/pricing).**
 
@@ -12,44 +12,31 @@
 根據[官網](https://cloud.google.com/speech-to-text/)的指示，在主控台啟用`Speech-to-Text` API，並且下載API金鑰(會是一個`.json`檔)。
 
 中文的話我只介紹圖形介面(GUI)怎麼使用，如果想從命令行執行的話，請參照英文的[README](README.md)。
-
-## Usage
-
-1.  Test if speech recognition works in python:
-    1. Change [here](https://github.com/kwea123/Unity_live_caption/blob/master/googlesr.py#L9) to where your `key.json` is located.
-    2. Run `python googlesr.py --debug --lang_code={YOUR LANGUAGE CODE}`. For the language codes, check [here](https://cloud.google.com/speech-to-text/docs/languages). You should see the recognition output on the console.
-
-2.  Output the recognition result to unity:
-    1.  Create a Text component via `GameObject->UI->Text`.
-    2.  Attach `subtitleListener.cs` to it.
-    3.  Run the unity program **FIRST**, either in editor or executable, then run `python googlesr.py --lang_code={YOUR LANGUAGE CODE} --connect`. You should see the recognition output now in unity. You can stop and restart the recognition anytime by pressing `Ctrl` and `c` in the python console without affecting the unity program at all.
     
-3.  **Remember to stop the python program when you finish the work, otherwise it is going to keep charging you! I disclaim any reponsibility of the induced charges by using my program.**
-    
-## Customization
+## GUI使用方法
 
-1.  You can change the connection port by changing the port number (default 5067) [here](https://github.com/kwea123/Unity_live_caption/blob/master/googlesr.py#L127) and [here](https://github.com/kwea123/Unity_live_caption/blob/master/subtitleListener.cs#L18)
+1.  從[這裡](https://github.com/kwea123/Unity_live_caption/releases/tag/v1.0)下載 `googlesr_gui_chinese.zip`
 
-2.  You can change how the text is printed on unity [here](https://github.com/kwea123/Unity_live_caption/blob/master/subtitleListener.cs#L73-L79) and [here](https://github.com/kwea123/Unity_live_caption/blob/master/subtitleListener.cs#L36-L39). The default is configured to print at most 32 characters in Chinese, so you might need to change if you're not using Chinese.
+2.  打開 `googlesr_gui_chinese.exe` 然後你會看到
 
-## GUI usage
+![alt](images/3.png)
 
-1.  Download `googlesr_gui_english.zip` from [here](https://github.com/kwea123/Unity_live_caption/releases/tag/v1.0).
+3.  選擇語言，設置剛才下載的API金鑰並且選擇是否連結到unity或者要不要在螢幕上直接顯示字幕。要連結到unity的話，請看[unity設置](#unity設置)
 
-2.  Open `googlesr_gui_english.exe` and you will see
+4.  按開始。他會需要一些時間啟動。啟動完成後你會看到以下的圖片，然後就可以開始講話了。
 
-![alt](images/1.png)
+![alt](images/4.png)
 
-3.  Select your language, set the API key to where you downloaded `key.json` and select whether to connect to unity and/or print to console.
+5.  同時按 `Ctrl` 和 `c` 來結束錄音。
 
-4.  Press Start to start. It takes some time to warm-up. When it's ready, you will see the following and you can start to talk. You can adjust the size of this window.
+6.  **請務必絕對一定要按結束，不然他會持續算錢！免責聲明：本人不負責任何正當或非正當使用本程式所帶來的任何費用！使用者皆視為同意我的免責聲明。**
 
-![alt](images/2.png)
+## unity設置
 
-5.  Press `Ctrl` and `c` to stop the program when you finish.
+1.  先設置一個Text component (`GameObject->UI->Text`)
+2.  在那個Text component上加上這裡的`subtitleListener.cs`
+3.  執行unity(在編輯器或是執行檔都可以)之後，他就會開始聆聽傳過去的字幕，然後這時再開始GUI的錄音即可。
 
-6.  **Remember to stop the program when you finish the work, otherwise it is going to keep charging you! I disclaim any reponsibility of the induced charges by using my program.**
-
-## Other issues
-Please ask in [issue](https://github.com/kwea123/Unity_live_caption/issues)
+## 其他問題
+可以在[這裡](https://github.com/kwea123/Unity_live_caption/issues)詢問
 
