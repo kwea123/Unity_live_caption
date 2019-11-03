@@ -1,12 +1,12 @@
 from argparse import ArgumentParser
-from google.cloud import speech
-from google.cloud.speech import enums, types
-import pyaudio
-from six.moves import queue
-import sys
-import os
+from google.cloud.speech import SpeechClient, types, enums
+from pyaudio import PyAudio, paInt16, paContinue
+from six.moves.queue import Queue, Empty
+from sys import stdout
 import socket
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'C:/Users/kwea123/Downloads/MyProject-e85ed8c91456.json'
+
+# from os import environ
+# environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'C:/Users/kwea123/Downloads/MyProject-e85ed8c91456.json'
 
 # Audio recording parameters
 RATE = 44100
@@ -19,13 +19,13 @@ class MicrophoneStream(object):
         self._chunk = chunk
 
         # Create a thread-safe buffer of audio data
-        self._buff = queue.Queue()
+        self._buff = Queue()
         self.closed = True
 
     def __enter__(self):
-        self._audio_interface = pyaudio.PyAudio()
+        self._audio_interface = PyAudio()
         self._audio_stream = self._audio_interface.open(
-            format=pyaudio.paInt16,
+            format=paInt16,
             # The API currently only supports 1-channel (mono) audio
             # https://goo.gl/z757pE
             channels=1, rate=self._rate,
@@ -52,7 +52,7 @@ class MicrophoneStream(object):
     def _fill_buffer(self, in_data, frame_count, time_info, status_flags):
         """Continuously collect data from the audio stream, into the buffer."""
         self._buff.put(in_data)
-        return None, pyaudio.paContinue
+        return None, paContinue
 
     def generator(self):
         while not self.closed:
@@ -71,7 +71,7 @@ class MicrophoneStream(object):
                     if chunk is None:
                         return
                     data.append(chunk)
-                except queue.Empty:
+                except Empty:
                     break
 
             yield b''.join(data)
@@ -101,8 +101,8 @@ def listen_print_loop(responses, print_locally=True, sock=None):
         
         if print_locally: # print the result on the console.
             if not result.is_final:
-                sys.stdout.write(transcript + overwrite_chars + '\r')
-                sys.stdout.flush()
+                stdout.write(transcript + overwrite_chars + '\r')
+                stdout.flush()
                 num_chars_printed = len(transcript)
 
             else:
@@ -130,7 +130,7 @@ if __name__ == '__main__':
     else:
         sock = None
 
-    client = speech.SpeechClient()
+    client = SpeechClient()
     config = types.RecognitionConfig(encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
                                      sample_rate_hertz=RATE,
                                      language_code=args.lang_code)
