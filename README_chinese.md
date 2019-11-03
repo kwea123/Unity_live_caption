@@ -1,34 +1,17 @@
 # Unity_live_caption
-Use Google Speech-to-Text API to do real-time live stream caption on Unity! Best when combined with your virtual character!
+利用 Google Speech-to-Text API 和 Unity 來做實時直播上字幕！ 可以跟你的虛擬腳色很好的搭配使用！
 
-**Important notice before you continue : The speech to text API is NOT free! The pricing guide is [here](https://cloud.google.com/speech-to-text/pricing).**
+**重要訊息 : 這個API是要收費的！ 收費規則在[這裡](https://cloud.google.com/speech-to-text/pricing).**
 
-The [youtube livestream](https://www.youtube.com/watch?v=AZsUm_cuj9U) that demos and explains how this works (explanation in Chinese, caption in Chinese/Japanese/English/French).
+這是我 [youtube直播](https://www.youtube.com/watch?v=AZsUm_cuj9U) 演示的結果。
 
-Currently, the live caption is done in `python` and the result is sent to unity in real time. There might be a way to do everything in `C#`, maybe [this](https://github.com/GoogleCloudPlatform/dotnet-docs-samples/tree/master/speech/api) but I did in `python` because of some reasons:
-1.  I'm not fluent in C#.
-2.  Doing speech recognition in another program allows to start/turn off the recognition at any time, and also allows to change the language at wish without restarting unity `.exe`.
-3.  There is already an asset which claims that it can do this (I don't know if it can do real time recognition though).
+## 前置作業
 
-## Pre-requisite
+你要先有google帳號。
 
-As this process uses Google Cloud API, you need to have an google account.
+根據[官網](https://cloud.google.com/speech-to-text/)的指示，在主控台啟用`Speech-to-Text` API，並且下載API金鑰(會是一個`.json`檔)。
 
-Follow the [website](https://cloud.google.com/speech-to-text/) to activate the `Speech-to-Text` API in the console, and download the API key, which should be a `.json` file. I will refer this key to be `key.json` in the following.
-
-Next, there are command line (CLI) version and GUI versions of this program. The code is the same but there are some performance differences:
-
-CLI: file size is small and allows more customization.
-
-GUI: file size is large (about 250MB) and takes some time to warm-up the speech to text program.
-
-Here is the tutorial of command line usage. For GUI users, please jump to [here](#GUI-usage).
-
-## Installation
-
-Make sure you have python. If not, installation is recommended via [Anaconda](https://www.anaconda.com/distribution/) with python version 3.
-
-Run `pip install -r requirements.txt` to install python dependencies.
+中文的話我只介紹圖形介面(GUI)怎麼使用，如果想從命令行執行的話，請參照英文的[README](README.md)。
 
 ## Usage
 
