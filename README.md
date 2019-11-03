@@ -18,6 +18,13 @@ Follow the [website](https://cloud.google.com/speech-to-text/) to activate the `
 
 ## Installation
 
+There are command line (CLI) version and GUI versions. The code is the same but there are some performance differences:
+
+CLI: file size is small and allows more customization.
+GUI: file size is large (about 250MB) and takes some time to warm-up the speech to text program.
+
+Here is the tutorial of command line usage. For GUI users, please jump to [here](#GUI-usage).
+
 Make sure you have python. If not, installation is recommended via [Anaconda](https://www.anaconda.com/distribution/) with python version 3.
 
 Run `pip install -r requirements.txt` to install python dependencies.
@@ -31,7 +38,7 @@ Run `pip install -r requirements.txt` to install python dependencies.
 2.  Output the recognition result to unity:
     1.  Create a Text component via `GameObject->UI->Text`.
     2.  Attach `subtitleListener.cs` to it.
-    3.  Run the unity program **FIRST**, either in editor or executable, then run `python googlesr.py --lang_code={YOUR LANGUAGE CODE} --connect`. You should see the recognition output now in unity. You can stop and restart the recognition anytime by pressing `ctrl+c` in the python console without affecting the unity program at all.
+    3.  Run the unity program **FIRST**, either in editor or executable, then run `python googlesr.py --lang_code={YOUR LANGUAGE CODE} --connect`. You should see the recognition output now in unity. You can stop and restart the recognition anytime by pressing `Ctrl` and `c` in the python console without affecting the unity program at all.
     
 3.  **Remember to stop the python program when you finish the work, otherwise it is going to keep charging you! I disclaim any reponsibility of the induced charges by using my program.**
     
@@ -40,6 +47,24 @@ Run `pip install -r requirements.txt` to install python dependencies.
 1.  You can change the connection port by changing the port number (default 5067) [here](https://github.com/kwea123/Unity_live_caption/blob/master/googlesr.py#L127) and [here](https://github.com/kwea123/Unity_live_caption/blob/master/subtitleListener.cs#L18)
 
 2.  You can change how the text is printed on unity [here](https://github.com/kwea123/Unity_live_caption/blob/master/subtitleListener.cs#L73-L79) and [here](https://github.com/kwea123/Unity_live_caption/blob/master/subtitleListener.cs#L36-L39). The default is configured to print at most 32 characters in Chinese, so you might need to change if you're not using Chinese.
+
+## GUI usage
+
+1.  Download `googlesr_gui_english.zip` from [here](https://github.com/kwea123/Unity_live_caption/releases/tag/v1.0).
+
+2.  Open `googlesr_gui_english.exe` and you will see
+
+![alt](AA)
+
+3.  Select your language, set the API key and select whether to connect to unity and/or print to console.
+
+4.  Press Start to start. It takes some time to warm-up. When it's ready, you will see the following and you can start to talk.
+
+![alt](AAS)
+
+5.  Press `Ctrl` and `c` to stop the program when you finish.
+
+6.  **Remember to stop the program when you finish the work, otherwise it is going to keep charging you! I disclaim any reponsibility of the induced charges by using my program.**
 
 ## Other issues
 Please ask in [issue](https://github.com/kwea123/Unity_live_caption/issues)
