@@ -59,7 +59,7 @@ Run `pip install -r requirements.txt` to install python dependencies.
 
 ![alt](images/1.png)
 
-3.  Select your language, set the API key to where you downloaded `key.json` and select whether to connect to unity and/or print to console.
+3.  Select your language, set the API key to where you downloaded `key.json` and select whether to connect to unity and/or print to console (if you want to connect to unity, please see the second point [here](#Usage)).
 
 4.  Press Start to start. It takes some time to warm-up. When it's ready, you will see the following and you can start to talk. You can adjust the size of this window.
 
