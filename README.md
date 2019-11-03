@@ -16,14 +16,15 @@ As this process uses Google Cloud API, you need to have an google account.
 
 Follow the [website](https://cloud.google.com/speech-to-text/) to activate the `Speech-to-Text` API in the console, and download the API key, which should be a `.json` file. I will refer this key to be `key.json` in the following.
 
-## Installation
-
-There are command line (CLI) version and GUI versions. The code is the same but there are some performance differences:
+Next, there are command line (CLI) version and GUI versions of this program. The code is the same but there are some performance differences:
 
 CLI: file size is small and allows more customization.
+
 GUI: file size is large (about 250MB) and takes some time to warm-up the speech to text program.
 
 Here is the tutorial of command line usage. For GUI users, please jump to [here](#GUI-usage).
+
+## Installation
 
 Make sure you have python. If not, installation is recommended via [Anaconda](https://www.anaconda.com/distribution/) with python version 3.
 
@@ -54,13 +55,13 @@ Run `pip install -r requirements.txt` to install python dependencies.
 
 2.  Open `googlesr_gui_english.exe` and you will see
 
-![alt](AA)
+![alt](images/1.png)
 
 3.  Select your language, set the API key and select whether to connect to unity and/or print to console.
 
-4.  Press Start to start. It takes some time to warm-up. When it's ready, you will see the following and you can start to talk.
+4.  Press Start to start. It takes some time to warm-up. When it's ready, you will see the following and you can start to talk. You can adjust the size of this window.
 
-![alt](AAS)
+![alt](images/2.png)
 
 5.  Press `Ctrl` and `c` to stop the program when you finish.
 
