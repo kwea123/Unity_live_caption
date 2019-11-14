@@ -3,6 +3,8 @@
 
 Use Google Speech-to-Text API to do real-time live stream caption on Unity! Best when combined with your virtual character!
 
+This is part of the [OpenVTuberProject](https://github.com/kwea123/OpenVTuberProject), which provides many toolkits for becoming a VTuber.
+
 **Important notice before you continue : The speech to text API is NOT free! The pricing guide is [here](https://cloud.google.com/speech-to-text/pricing).**
 
 The [youtube livestream](https://www.youtube.com/watch?v=AZsUm_cuj9U) that demos and explains how this works (explanation in Chinese, caption in Chinese/Japanese/English/French).
