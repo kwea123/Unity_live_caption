@@ -1,4 +1,7 @@
 # Unity_live_caption
+
+## Update: Now Unity has native python for unity package! It should be easier to use this script directly inside unity!
+
 [繁體中文解說看這裡](README_chinese.md)
 
 Use Google Speech-to-Text API to do real-time live stream caption on Unity! Best when combined with your virtual character!
