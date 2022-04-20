@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from google.cloud import speech
+from google.cloud import speech, translate
 from pyaudio import PyAudio, paInt16, paContinue
 from six.moves.queue import Queue, Empty
 from sys import stdout
@@ -11,9 +11,9 @@ environ['GOOGLE_APPLICATION_CREDENTIALS'] = \
 
 # Audio recording parameters
 RATE = 44100
-CHUNK = int(RATE / 1000)  # 100ms
+CHUNK = RATE//1000  # 100ms
 
-class MicrophoneStream(object):
+class MicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
     def __init__(self, rate, chunk):
         self._rate = rate
@@ -61,37 +61,42 @@ class MicrophoneStream(object):
             # data, and stop iteration if the chunk is None, indicating the
             # end of the audio stream.
             chunk = self._buff.get()
-            if chunk is None:
-                return
+            if chunk is None: return
             data = [chunk]
 
             # Now consume whatever other data's still buffered.
             while True:
                 try:
                     chunk = self._buff.get(block=False)
-                    if chunk is None:
-                        return
+                    if chunk is None: return
                     data.append(chunk)
-                except Empty:
-                    break
+                except Empty: break
 
             yield b''.join(data)
 
-def listen_print_loop(responses, print_locally=True, sock=None):
+def listen_print_loop(sp_responses,
+                      tr_client,
+                      tgt_lang_code,
+                      print_locally=True,
+                      sock=None):
     num_chars_printed = 0
-    for response in responses:
-        if not response.results:
-            continue
+    for sp_response in sp_responses:
+        if not sp_response.results: continue
 
         # The `results` list is consecutive. For streaming, we only care about
         # the first result being considered, since once it's `is_final`, it
         # moves on to considering the next utterance.
-        result = response.results[0]
-        if not result.alternatives:
-            continue
+        result = sp_response.results[0]
+        if not result.alternatives: continue
 
         # Display the transcription of the top alternative.
         transcript = result.alternatives[0].transcript
+        if tr_client is not None: # translate the text
+            tr_response = tr_client.translate_text(
+                contents=[transcript],
+                target_language_code=tgt_lang_code,
+                parent="projects/youtubeapi-329002")
+            transcript = tr_response.translations[0].translated_text
 
         # If the previous result was longer than this one, we need to print
         # some extra spaces to overwrite the previous result
@@ -113,15 +118,15 @@ def listen_print_loop(responses, print_locally=True, sock=None):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument("--debug", action="store_true", 
-                        help="show speech recognition result on the console",
-                        default=False)
-    parser.add_argument("--connect", action="store_true", 
-                        help="connect to unity",
-                        default=False)
-    parser.add_argument("--lang_code", type=str, 
-                        help="the language code of your language",
-                        default="zh-tw")
+    parser.add_argument("--debug", default=False, action="store_true", 
+                        help="show speech recognition result on the console")
+    parser.add_argument("--connect", default=False, action="store_true", 
+                        help="connect to unity")
+    parser.add_argument("--src_lang_code", type=str, default="zh-tw",
+                        help="the language code of the speech language")
+    parser.add_argument("--tgt_lang_code", type=str, default="en",
+                        help="""the language code of the language you want to translate to.
+                        Set to empty string to disable translation.""")
     args = parser.parse_args()
 
     if args.connect:
@@ -131,23 +136,29 @@ if __name__ == '__main__':
     else:
         sock = None
 
-    client = speech.SpeechClient()
+    sp_client = speech.SpeechClient()
     config = speech.RecognitionConfig(
                 encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
                 sample_rate_hertz=RATE,
-                language_code=args.lang_code)
+                language_code=args.src_lang_code)
     streaming_config = \
         speech.StreamingRecognitionConfig(config=config, interim_results=True)
 
-    print(f"{args.lang_code} recognition started!")
+    if args.tgt_lang_code != "":
+        tr_client = translate.TranslationServiceClient()
+    else:
+        tr_client = None
+
+    print(f"{args.src_lang_code} recognition, {args.tgt_lang_code} translation started!")
     while True:
         with MicrophoneStream(RATE, CHUNK) as stream:
             audio_generator = stream.generator()
             requests = (speech.StreamingRecognizeRequest(audio_content=content)
                         for content in audio_generator)
             try:
-                responses = client.streaming_recognize(streaming_config, requests)
-                listen_print_loop(responses, print_locally=args.debug, sock=sock)
+                sp_responses = sp_client.streaming_recognize(streaming_config, requests)
+                listen_print_loop(sp_responses, tr_client, args.tgt_lang_code,
+                                  print_locally=args.debug, sock=sock)
             except KeyboardInterrupt:
                 break
             except: # ignore "400 Exceeded maximum allowed stream duration of 305 seconds."
