@@ -1,12 +1,13 @@
 from argparse import ArgumentParser
-from google.cloud.speech import SpeechClient, types, enums
+from google.cloud import speech
 from pyaudio import PyAudio, paInt16, paContinue
 from six.moves.queue import Queue, Empty
 from sys import stdout
 import socket
 
-# from os import environ
-# environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'C:/Users/kwea123/Downloads/MyProject-e85ed8c91456.json'
+from os import environ
+environ['GOOGLE_APPLICATION_CREDENTIALS'] = \
+    'C:/Users/kwea1/Downloads/youtubeapi-329002-9f71c84a7e37.json'
 
 # Audio recording parameters
 RATE = 44100
@@ -130,19 +131,21 @@ if __name__ == '__main__':
     else:
         sock = None
 
-    client = SpeechClient()
-    config = types.RecognitionConfig(encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-                                     sample_rate_hertz=RATE,
-                                     language_code=args.lang_code)
-    streaming_config = types.StreamingRecognitionConfig(config=config, interim_results=True)
+    client = speech.SpeechClient()
+    config = speech.RecognitionConfig(
+                encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+                sample_rate_hertz=RATE,
+                language_code=args.lang_code)
+    streaming_config = \
+        speech.StreamingRecognitionConfig(config=config, interim_results=True)
 
-    print("%s recognition started!"%args.lang_code)
+    print(f"{args.lang_code} recognition started!")
     while True:
         with MicrophoneStream(RATE, CHUNK) as stream:
             audio_generator = stream.generator()
-            requests = (types.StreamingRecognizeRequest(audio_content=content)
+            requests = (speech.StreamingRecognizeRequest(audio_content=content)
                         for content in audio_generator)
-            try:    
+            try:
                 responses = client.streaming_recognize(streaming_config, requests)
                 listen_print_loop(responses, print_locally=args.debug, sock=sock)
             except KeyboardInterrupt:

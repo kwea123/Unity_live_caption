@@ -1,2 +1,2 @@
-google-cloud-speech
+google-cloud-speech==2.13.1
 pyaudio

@@ -31,7 +31,7 @@ Here is the tutorial of command line usage. For GUI users, please jump to [here]
 
 ## Installation
 
-Make sure you have python. If not, installation is recommended via [Anaconda](https://www.anaconda.com/distribution/) with python version 3.
+Make sure you have python. If not, installation is recommended via [Anaconda](https://www.anaconda.com/distribution/) with python version **3.6** (if you use other versions, you need to manually download and install `pyaudio` from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio)).
 
 Run `pip install -r requirements.txt` to install python dependencies.
 
