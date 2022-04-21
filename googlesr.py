@@ -115,6 +115,10 @@ def listen_print_loop(sp_responses,
                     stdout.flush()
                     num_chars_printed = len(transcript)
             else:
+                if tr_client is not None and transcript[0]!='@': # translate
+                    # add a prefix '@' indicating this is translation
+                    transcript = '@'+tr_client.translate(transcript, tgt_lang_code).result
+                last_t = time.time()
                 print(transcript + overwrite_chars)
                 num_chars_printed = 0
 
