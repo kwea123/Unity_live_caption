@@ -1,9 +1,11 @@
 from argparse import ArgumentParser
-from google.cloud import speech, translate
+from google.cloud import speech
+from translatepy import Translator
 from pyaudio import PyAudio, paInt16, paContinue
 from six.moves.queue import Queue, Empty
 from sys import stdout
 import socket
+import time
 
 from os import environ
 environ['GOOGLE_APPLICATION_CREDENTIALS'] = \
@@ -12,6 +14,7 @@ environ['GOOGLE_APPLICATION_CREDENTIALS'] = \
 # Audio recording parameters
 RATE = 44100
 CHUNK = RATE//1000  # 100ms
+TRANSLATION_INTERVAL = 1 # second
 
 class MicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
@@ -79,6 +82,7 @@ def listen_print_loop(sp_responses,
                       tgt_lang_code,
                       print_locally=True,
                       sock=None):
+    global last_t
     num_chars_printed = 0
     for sp_response in sp_responses:
         if not sp_response.results: continue
@@ -91,26 +95,25 @@ def listen_print_loop(sp_responses,
 
         # Display the transcription of the top alternative.
         transcript = result.alternatives[0].transcript
-        if tr_client is not None: # translate the text
-            tr_response = tr_client.translate_text(
-                contents=[transcript],
-                target_language_code=tgt_lang_code,
-                parent="projects/youtubeapi-329002")
-            transcript = tr_response.translations[0].translated_text
-
-        # If the previous result was longer than this one, we need to print
-        # some extra spaces to overwrite the previous result
-        overwrite_chars = ' ' * (num_chars_printed - len(transcript))
+        t = time.time()
+        if t-last_t>TRANSLATION_INTERVAL and tr_client is not None: # translate
+            # add a prefix '@' indicating this is translation
+            transcript = '@'+tr_client.translate(transcript, tgt_lang_code).result
+            last_t = t
 
         if sock is not None:
             sock.send(bytes(transcript, "utf-8"))
         
         if print_locally: # print the result on the console.
+            # If the previous result was longer than this one, we need to print
+            # some extra spaces to overwrite the previous result
+            overwrite_chars = ' ' * (num_chars_printed - len(transcript))
             if not result.is_final:
-                stdout.write(transcript + overwrite_chars + '\r')
-                stdout.flush()
-                num_chars_printed = len(transcript)
-
+                if tr_client is None or \
+                   (tr_client is not None and transcript[0]=='@'):
+                    stdout.write(transcript + overwrite_chars + '\r')
+                    stdout.flush()
+                    num_chars_printed = len(transcript)
             else:
                 print(transcript + overwrite_chars)
                 num_chars_printed = 0
@@ -140,16 +143,19 @@ if __name__ == '__main__':
     config = speech.RecognitionConfig(
                 encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
                 sample_rate_hertz=RATE,
+                enable_automatic_punctuation=True,
+                use_enhanced=True,
                 language_code=args.src_lang_code)
     streaming_config = \
         speech.StreamingRecognitionConfig(config=config, interim_results=True)
 
     if args.tgt_lang_code != "":
-        tr_client = translate.TranslationServiceClient()
+        tr_client = Translator()
     else:
         tr_client = None
 
     print(f"{args.src_lang_code} recognition, {args.tgt_lang_code} translation started!")
+    last_t = time.time()
     while True:
         with MicrophoneStream(RATE, CHUNK) as stream:
             audio_generator = stream.generator()
