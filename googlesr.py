@@ -144,7 +144,6 @@ if __name__ == '__main__':
                 encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
                 sample_rate_hertz=RATE,
                 enable_automatic_punctuation=True,
-                use_enhanced=True,
                 language_code=args.src_lang_code)
     streaming_config = \
         speech.StreamingRecognitionConfig(config=config, interim_results=True)
